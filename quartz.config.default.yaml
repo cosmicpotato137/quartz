@@ -263,6 +263,7 @@ layout:
       priority: 35
       direction: row
       gap: 0.5rem
+      mobileMenu: true
   byPageType:
     "404":
       positions:

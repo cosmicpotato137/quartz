@@ -316,6 +316,10 @@
               "gap": {
                 "type": "string",
                 "description": "Gap between items"
+              },
+              "mobileMenu": {
+                "type": "boolean",
+                "description": "On mobile, show this group inside the explorer's hamburger menu instead of next to the page title"
               }
             }
           },

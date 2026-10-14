@@ -168,6 +168,8 @@ export interface FlexGroupConfig {
   direction?: "row" | "row-reverse" | "column" | "column-reverse"
   wrap?: "nowrap" | "wrap" | "wrap-reverse"
   gap?: string
+  /** On mobile, show this group inside the explorer's hamburger menu (above the file tree) instead of next to the page title. Has no effect if the explorer is not on the page. */
+  mobileMenu?: boolean
 }
 
 /** Per-page-type layout overrides */

@@ -244,6 +244,42 @@ a {
       }
     }
 
+    // Groups with `mobileMenu: true` move into the explorer's hamburger menu on mobile.
+    // Only applies when an explorer is present; otherwise they stay next to the page title.
+    & .sidebar.left:has(.explorer) {
+      @media all and ($mobile) {
+        & .mobile-menu {
+          position: absolute;
+          z-index: 101;
+          top: 3.5rem;
+          left: -100vw;
+          width: 100%;
+          box-sizing: border-box;
+          padding-right: 1rem;
+          visibility: hidden;
+          // animate `left` rather than `transform`, which would break the search modal's
+          // `position: fixed`
+          transition:
+            left 200ms ease,
+            visibility 200ms ease;
+
+          // still allow search to be opened via keyboard shortcut while the menu is closed
+          & .search-container.active {
+            visibility: visible;
+          }
+        }
+
+        & .explorer .explorer-content {
+          padding-top: 6.5rem;
+        }
+
+        &:has(.explorer:not(.collapsed) > .mobile-explorer:not(.hide-until-loaded)) .mobile-menu {
+          left: 0;
+          visibility: visible;
+        }
+      }
+    }
+
     & .sidebar.right {
       grid-area: grid-sidebar-right;
       margin-right: 0;

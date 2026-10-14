@@ -934,6 +934,7 @@ export function resolveGroups(
         direction: groupConfig.direction ?? "row",
         wrap: groupConfig.wrap,
         gap: groupConfig.gap ?? "1rem",
+        mobileMenu: groupConfig.mobileMenu,
       }) as QuartzComponent
 
       entries.push({ priority: groupPriority.get(item.group) ?? 50, component: flexComponent })
