@@ -23,6 +23,11 @@ export type QuartzComponent = ((props: QuartzComponentProps) => any) & {
   css?: StringResource
   beforeDOMLoaded?: StringResource
   afterDOMLoaded?: StringResource
+  /**
+   * When placed in the left sidebar, keep this component in the mobile header bar
+   * next to the menu button instead of moving it into the mobile menu.
+   */
+  pinnedOnMobile?: boolean
 }
 
 export type QuartzComponentConstructor<Options extends object | undefined = undefined> = (

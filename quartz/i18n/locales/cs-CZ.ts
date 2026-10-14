@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Procházet",
     },
+    mobileMenu: {
+      title: "Menu",
+    },
     footer: {
       createdWith: "Vytvořeno pomocí",
     },

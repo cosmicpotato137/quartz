@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Selain",
     },
+    mobileMenu: {
+      title: "Valikko",
+    },
     footer: {
       createdWith: "Luotu käyttäen",
     },

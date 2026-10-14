@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Fájlböngésző",
     },
+    mobileMenu: {
+      title: "Menü",
+    },
     footer: {
       createdWith: "Készítve ezzel:",
     },

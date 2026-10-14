@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "รายการหน้า",
     },
+    mobileMenu: {
+      title: "เมนู",
+    },
     footer: {
       createdWith: "สร้างด้วย",
     },

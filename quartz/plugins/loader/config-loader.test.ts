@@ -303,3 +303,78 @@ describe("buildLayoutForEntries with constructors", () => {
     assert.strictEqual(result.right?.length, 1)
   })
 })
+
+describe("pinnedOnMobile", () => {
+  test("pins the page title regardless of how its source is written", () => {
+    for (const [source, registeredName] of [
+      ["@quartz-community/page-title", "@quartz-community/page-title"],
+      ["github:quartz-community/page-title", "page-title"],
+      ["./plugins/page-title", "page-title"],
+    ]) {
+      const component = makeComponent("PageTitle")
+      componentRegistry.register(registeredName, component, "test-source")
+
+      const result = buildLayoutForEntries(
+        [makeEntry(source, { position: "left", priority: 10 })],
+        {},
+      )
+      assert.strictEqual(result.left?.[0].pinnedOnMobile, true, source)
+      componentRegistry.clear()
+    }
+  })
+
+  test("does not pin other left sidebar components", () => {
+    const component = makeComponent("Search")
+    componentRegistry.register("@quartz-community/search", component, "test-source")
+
+    const result = buildLayoutForEntries(
+      [makeEntry("@quartz-community/search", { position: "left", priority: 20 })],
+      {},
+    )
+    assert.ok(!result.left?.[0].pinnedOnMobile)
+  })
+
+  test("pins mobile-only components, which are not part of the desktop sidebar", () => {
+    const component = makeComponent("Spacer")
+    componentRegistry.register("spacer", component, "test-source")
+
+    const entry: PluginJsonEntry = {
+      source: "spacer",
+      enabled: true,
+      options: {},
+      layout: { position: "left" as LayoutPosition, priority: 25, display: "mobile-only" },
+    }
+    const result = buildLayoutForEntries([entry], {})
+    assert.strictEqual(result.left?.[0].pinnedOnMobile, true)
+  })
+
+  test("keeps the pin through a condition wrapper", () => {
+    const component = makeComponent("PageTitle")
+    componentRegistry.register("page-title", component, "test-source")
+
+    const entry: PluginJsonEntry = {
+      source: "page-title",
+      enabled: true,
+      options: {},
+      layout: { position: "left" as LayoutPosition, priority: 10, condition: "not-index" },
+    }
+    const result = buildLayoutForEntries([entry], {})
+    assert.notStrictEqual(result.left?.[0], component)
+    assert.strictEqual(result.left?.[0].pinnedOnMobile, true)
+  })
+
+  test("pins a group when any of its members is pinned", () => {
+    const title = makeComponent("PageTitle")
+    title.pinnedOnMobile = true
+    const darkmode = makeComponent("Darkmode")
+    const search = makeComponent("Search")
+    const items = [
+      { component: title, priority: 10, group: "brand" },
+      { component: darkmode, priority: 20, group: "brand" },
+      { component: search, priority: 30, group: "toolbar" },
+    ]
+    const [brand, toolbar] = resolveGroups(items, {})
+    assert.strictEqual(brand.pinnedOnMobile, true)
+    assert.strictEqual(toolbar.pinnedOnMobile, false)
+  })
+})

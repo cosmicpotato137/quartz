@@ -133,6 +133,8 @@ Available `display` values:
 | `mobile-only`  | Only visible on mobile devices        |
 | `desktop-only` | Only visible on desktop devices       |
 
+In the `left` position, `mobile-only` components stay in the mobile header bar next to the page title rather than moving into the [[layout#Mobile menu|mobile menu]].
+
 ### TS Override
 
 For the TS override approach, use `Component.MobileOnly()` or `Component.DesktopOnly()` wrappers:

@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Naršyklė",
     },
+    mobileMenu: {
+      title: "Meniu",
+    },
     footer: {
       createdWith: "Sukurta Su",
     },

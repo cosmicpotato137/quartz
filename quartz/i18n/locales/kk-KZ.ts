@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Зерттеуші",
     },
+    mobileMenu: {
+      title: "Мәзір",
+    },
     footer: {
       createdWith: "Құрастырылған құрал:",
     },

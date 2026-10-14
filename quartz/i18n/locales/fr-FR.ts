@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Explorateur",
     },
+    mobileMenu: {
+      title: "Menu",
+    },
     footer: {
       createdWith: "Créé avec",
     },

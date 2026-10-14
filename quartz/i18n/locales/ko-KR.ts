@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "탐색기",
     },
+    mobileMenu: {
+      title: "메뉴",
+    },
     footer: {
       createdWith: "Created with",
     },

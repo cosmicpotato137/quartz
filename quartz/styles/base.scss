@@ -242,6 +242,17 @@ a {
         padding: 0;
         padding-top: 2rem;
       }
+
+      // with a mobile menu, the sidebar becomes a full-bleed sticky header bar
+      // and the menu slides in below it (see .mobile-menu)
+      &:has(> .mobile-menu) {
+        @media all and ($mobile) {
+          position: sticky;
+          margin: 0 -1rem;
+          padding: 1rem;
+          background-color: var(--light);
+        }
+      }
     }
 
     & .sidebar.right {
@@ -306,6 +317,80 @@ a {
     & footer {
       margin-left: 0;
     }
+  }
+}
+
+// ============================================================================
+// Mobile Menu
+// ============================================================================
+
+// On larger screens the menu is transparent to layout: its children are
+// regular left sidebar items.
+.mobile-menu {
+  display: contents;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  align-items: center;
+  margin: 0;
+  padding: 5px;
+  border: none;
+  background-color: transparent;
+  color: var(--darkgray);
+  cursor: pointer;
+
+  & svg {
+    fill: none;
+    stroke: currentColor;
+  }
+
+  & .close-icon,
+  &[aria-expanded="true"] .menu-icon {
+    display: none;
+  }
+
+  &[aria-expanded="true"] .close-icon {
+    display: block;
+  }
+}
+
+@media all and ($mobile) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .mobile-menu {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    // 100% is the height of the header bar, which is stuck to the top of the viewport
+    height: calc(100dvh - 100%);
+    padding: 1rem 1rem 2rem 1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--light);
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition:
+      transform 200ms ease,
+      visibility 200ms ease;
+  }
+
+  .mobile-menu-toggle[aria-expanded="true"] ~ .mobile-menu {
+    visibility: visible;
+    // `none` rather than translateX(0): a transform would make fixed-position
+    // descendants (e.g. the search modal) position relative to the menu
+    transform: none;
+  }
+
+  html:has(.mobile-menu-toggle[aria-expanded="true"]) {
+    overflow: hidden;
   }
 }
 

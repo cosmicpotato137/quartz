@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Nội dung",
     },
+    mobileMenu: {
+      title: "Menu",
+    },
     footer: {
       createdWith: "Được tạo bằng",
     },

@@ -55,5 +55,6 @@ export default ((config: FlexConfig) => {
     ...config.components.map((c) => c.Component.beforeDOMLoaded),
   )
   Flex.css = concatenateResources(...config.components.map((c) => c.Component.css))
+  Flex.pinnedOnMobile = config.components.some((c) => c.Component.pinnedOnMobile)
   return Flex
 }) satisfies QuartzComponentConstructor<FlexConfig>

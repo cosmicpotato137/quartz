@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Utforsker",
     },
+    mobileMenu: {
+      title: "Meny",
+    },
     footer: {
       createdWith: "Laget med",
     },

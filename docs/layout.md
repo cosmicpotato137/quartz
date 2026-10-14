@@ -18,7 +18,7 @@ export interface FullPageLayout {
   beforeBody: QuartzComponent[] // laid out vertically
   pageBody: QuartzComponent // single component
   afterBody: QuartzComponent[] // laid out vertically
-  left: QuartzComponent[] // vertical on desktop and tablet, horizontal on mobile
+  left: QuartzComponent[] // vertical on desktop and tablet, in a hamburger menu on mobile
   right: QuartzComponent[] // vertical on desktop, horizontal on tablet and mobile
   footer: QuartzComponent[] // laid out vertically
 }
@@ -115,6 +115,12 @@ layout:
         left: []
         right: []
 ```
+
+### Mobile menu
+
+On mobile, the left sidebar becomes a header bar that sticks to the top of the screen. It shows a hamburger button and the [[PageTitle|page title]]. Every other component in the `left` position (by default the search bar, darkmode and reader mode toggles, and the explorer) moves into a menu that the hamburger button opens. To change what goes in the menu, add or remove components in the `left` position.
+
+Components with `display: mobile-only` aren't part of the desktop sidebar, so they stay in the header bar instead of moving into the menu. When overriding the layout in `quartz.ts`, you can keep any other component in the header bar by setting `pinnedOnMobile = true` on it.
 
 ### Conditional Rendering
 

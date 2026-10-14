@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Провідник",
     },
+    mobileMenu: {
+      title: "Меню",
+    },
     footer: {
       createdWith: "Створено за допомогою",
     },

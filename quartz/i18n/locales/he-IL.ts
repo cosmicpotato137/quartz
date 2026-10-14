@@ -36,6 +36,9 @@ export default {
     explorer: {
       title: "סייר",
     },
+    mobileMenu: {
+      title: "תפריט",
+    },
     footer: {
       createdWith: "נוצר באמצעות",
     },

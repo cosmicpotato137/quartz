@@ -787,6 +787,10 @@ export function buildLayoutForEntries(
       component = reg.component as QuartzComponent
     }
 
+    if (isPinnedOnMobile(name)) {
+      component.pinnedOnMobile = true
+    }
+
     // Apply display modifier
     if (layout.display && layout.display !== "all") {
       component = applyDisplayWrapper(component, layout.display)
@@ -842,6 +846,10 @@ export function buildLayoutForEntries(
       )
     } else {
       component = reg.component as QuartzComponent
+    }
+
+    if (isPinnedOnMobile(name)) {
+      component.pinnedOnMobile = true
     }
 
     posArray.push({
@@ -946,6 +954,17 @@ export function resolveGroups(
   entries.sort((a, b) => a.priority - b.priority)
 
   return entries.map((e) => e.component)
+}
+
+/**
+ * Plugins whose component stays in the mobile header bar when placed in the left sidebar.
+ * Every other left sidebar component is moved into the mobile menu.
+ */
+const PINNED_ON_MOBILE_PLUGINS = new Set(["page-title"])
+
+function isPinnedOnMobile(pluginName: string): boolean {
+  // match "@quartz-community/page-title", "github:quartz-community/page-title", etc. alike
+  return PINNED_ON_MOBILE_PLUGINS.has(pluginName.split("/").pop() ?? pluginName)
 }
 
 function applyDisplayWrapper(

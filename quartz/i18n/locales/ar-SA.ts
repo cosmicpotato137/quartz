@@ -33,6 +33,9 @@ export default {
     explorer: {
       title: "المستعرض",
     },
+    mobileMenu: {
+      title: "القائمة",
+    },
     readerMode: {
       title: "وضع القارئ",
     },

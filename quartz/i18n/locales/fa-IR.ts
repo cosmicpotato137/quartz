@@ -36,6 +36,9 @@ export default {
     explorer: {
       title: "مطالب",
     },
+    mobileMenu: {
+      title: "منو",
+    },
     footer: {
       createdWith: "ساخته شده با",
     },

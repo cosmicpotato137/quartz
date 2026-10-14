@@ -38,6 +38,9 @@ export interface Translation {
     explorer: {
       title: string
     }
+    mobileMenu: {
+      title: string
+    }
     footer: {
       createdWith: string
     }

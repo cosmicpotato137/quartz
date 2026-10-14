@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Проводник",
     },
+    mobileMenu: {
+      title: "Меню",
+    },
     footer: {
       createdWith: "Создано с помощью",
     },

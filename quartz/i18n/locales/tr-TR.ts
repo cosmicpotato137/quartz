@@ -35,6 +35,9 @@ export default {
     explorer: {
       title: "Gezgin",
     },
+    mobileMenu: {
+      title: "Menü",
+    },
     footer: {
       createdWith: "Şununla oluşturuldu",
     },
