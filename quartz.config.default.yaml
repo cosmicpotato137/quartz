@@ -158,7 +158,7 @@ plugins:
     layout:
       position: left
       priority: 70
-  - source: "@quartz-community/article-title"
+  - source: "github:cosmicpotato137/article-title#main"
     enabled: true
     layout:
       position: beforeBody
