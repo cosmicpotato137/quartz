@@ -166,7 +166,7 @@ plugins:
     layout:
       position: right
       priority: 50
-  - source: "@quartz-community/article-title"
+  - source: "github:cosmicpotato137/article-title#main"
     enabled: true
     layout:
       position: beforeBody
