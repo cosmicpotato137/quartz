@@ -1,13 +1,13 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Quartz 5
+  pageTitle: My Digital Garden
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: quartz.jzhao.xyz
+  baseUrl: garden.cilantro.cc
   ignorePatterns:
     - private
     - templates
@@ -71,8 +71,8 @@ plugins:
     enabled: true
     order: 50
     layout:
-      position: right
-      priority: 30
+      position: left
+      priority: 40
   - source: "@quartz-community/crawl-links"
     enabled: true
     options:
@@ -106,9 +106,9 @@ plugins:
       theme: tokyo-night
       mode: both
   - source: "@quartz-community/remove-draft"
-    enabled: true
-  - source: "@quartz-community/explicit-publish"
     enabled: false
+  - source: "@quartz-community/explicit-publish"
+    enabled: true
   - source: "@quartz-community/alias-redirects"
     enabled: true
   - source: "@quartz-community/content-index"
@@ -123,7 +123,7 @@ plugins:
   - source: "@quartz-community/cname"
     enabled: true
   - source: "@quartz-community/canvas-page"
-    enabled: true
+    enabled: false
   - source: "@quartz-community/content-page"
     enabled: true
   - source: "@quartz-community/folder-page"
@@ -131,35 +131,40 @@ plugins:
   - source: "@quartz-community/tag-page"
     enabled: true
   - source: "@quartz-community/explorer"
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
-  - source: "@quartz-community/graph"
+  - source: "github:cosmicpotato137/quartz-graph#obsidian-style-graphs"
     enabled: true
     layout:
       position: right
-      priority: 10
+      priority: 50
+    options:
+      localGraph:
+        fontSize: 1
+      globalGraph:
+        fontSize: 1
   - source: "@quartz-community/search"
     enabled: true
     layout:
       position: left
-      priority: 20
+      priority: 60
       group: toolbar
       groupOptions:
         grow: true
   - source: "@quartz-community/backlinks"
     enabled: true
     layout:
-      position: right
-      priority: 50
+      position: left
+      priority: 70
   - source: "@quartz-community/article-title"
     enabled: true
     layout:
       position: beforeBody
       priority: 10
   - source: "@quartz-community/content-meta"
-    enabled: true
+    enabled: false
     layout:
       position: beforeBody
       priority: 20
@@ -177,16 +182,16 @@ plugins:
     enabled: true
     layout:
       position: left
-      priority: 30
+      priority: 60
       group: toolbar
   - source: "@quartz-community/reader-mode"
     enabled: true
     layout:
       position: left
-      priority: 35
+      priority: 65
       group: toolbar
   - source: "@quartz-community/breadcrumbs"
-    enabled: true
+    enabled: false
     layout:
       position: beforeBody
       priority: 5

@@ -1,3 +1,14 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+
+// Stack right sidebar components vertically on tablet/mobile (like desktop),
+// still placed between afterBody and footer.
+.page > #quartz-body .sidebar.right {
+  @media all and not ($desktop) {
+    flex-direction: column;
+    & > * {
+      flex: initial;
+    }
+  }
+}
