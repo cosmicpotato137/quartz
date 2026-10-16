@@ -1,16 +1,17 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Quartz 5
-  pageTitleSuffix: ""
+  pageTitle: Macintyre Sunde
+  pageTitleSuffix: " | Obsidian Portfolio"
   enableSPA: true
   enablePopovers: true
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: quartz.jzhao.xyz
+  baseUrl: portfolio.cilantro.cc
   ignorePatterns:
     - private
     - templates
+    - Templates
     - .obsidian
   theme:
     fontOrigin: googleFonts
@@ -126,20 +127,32 @@ plugins:
     enabled: true
   - source: "@quartz-community/content-page"
     enabled: true
-  - source: "@quartz-community/folder-page"
+  - source: "github:cosmicpotato137/quartz-folder-page#feat/custom-folder-page"
     enabled: true
   - source: "@quartz-community/tag-page"
     enabled: true
-  - source: "@quartz-community/explorer"
+  - source: "github:cosmicpotato137/explorer#main"
     enabled: true
     layout:
       position: left
       priority: 50
-  - source: "@quartz-community/graph"
+  - source: "github:cosmicpotato137/quartz-graph#obsidian-style-graphs"
     enabled: true
     layout:
       position: right
-      priority: 10
+      priority: 50
+    options:
+      localGraph:
+        fontSize: 1
+        display:
+          textFadeThreshold: -1
+        forces:
+          linkDistance: 30
+          linkForce: .6
+      globalGraph:
+        fontSize: 1
+        display:
+          textFadeThreshold: -1
   - source: "@quartz-community/search"
     enabled: true
     layout:
@@ -159,7 +172,7 @@ plugins:
       position: beforeBody
       priority: 10
   - source: "@quartz-community/content-meta"
-    enabled: true
+    enabled: false
     layout:
       position: beforeBody
       priority: 20
@@ -225,12 +238,12 @@ plugins:
   - source: "@quartz-community/note-properties"
     enabled: true
     options:
-      includeAll: false
+      includeAll: true
       includedProperties:
         - description
         - tags
         - aliases
-      excludedProperties: []
+      excludedProperties: [modified,title]
       hidePropertiesView: false
       delimiters: ---
       language: yaml
