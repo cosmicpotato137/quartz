@@ -7,9 +7,16 @@ import {
   JSResourceToScriptElement,
   StaticResources,
 } from "../util/resources"
-import { FullSlug, RelativeURL, joinSegments, normalizeHastElement } from "../util/path"
+import {
+  FullSlug,
+  RelativeURL,
+  joinSegments,
+  normalizeHastElement,
+  slugifyFilePath,
+} from "../util/path"
 import { clone } from "../util/clone"
 import { Root, Element, ElementContent } from "hast"
+import { visit, SKIP } from "unist-util-visit"
 import { GlobalConfiguration } from "../cfg"
 import { i18n } from "../i18n"
 import { styleText } from "util"
@@ -297,6 +304,62 @@ export function renderTranscludes(
   walk(root)
 }
 
+// allFiles is shared by every page rendered in an emit pass, so build the set once per pass
+const existingSlugsCache = new WeakMap<QuartzComponentProps["allFiles"], Set<string>>()
+
+/**
+ * Slugs that resolve to something in the output: published and virtual pages,
+ * the redirects emitted for their aliases, and copied (non-markdown) assets.
+ * Unlike ctx.allSlugs this excludes notes dropped by filters (e.g. explicit-publish).
+ */
+function existingSlugs(componentData: QuartzComponentProps): Set<string> {
+  const { allFiles, ctx } = componentData
+  let slugs = existingSlugsCache.get(allFiles)
+  if (slugs) return slugs
+
+  slugs = new Set<string>()
+  for (const file of allFiles) {
+    if (file.slug) slugs.add(file.slug)
+    for (const alias of (file.aliases as string[] | undefined) ?? []) slugs.add(alias)
+  }
+  for (const fp of ctx.allFiles) {
+    if (!fp.endsWith(".md")) slugs.add(slugifyFilePath(fp))
+  }
+
+  existingSlugsCache.set(allFiles, slugs)
+  return slugs
+}
+
+/**
+ * Unwrap internal links whose target page doesn't exist (so they would 404) into
+ * plain text, and drop embeds of such pages entirely.
+ * @internal Exported for testing only.
+ */
+export function removeBrokenLinks(root: Root, componentData: QuartzComponentProps) {
+  const slugs = existingSlugs(componentData)
+  const isBrokenLink = (node: ElementContent | undefined) => {
+    if (node?.type !== "element" || node.tagName !== "a") return false
+    const slug = node.properties?.["data-slug"]
+    return typeof slug === "string" && !slugs.has(slug)
+  }
+
+  visit(root, "element", (node, index, parent) => {
+    if (!parent || index === undefined) return
+
+    const classNames = (node.properties?.className ?? []) as string[]
+    if (node.tagName === "blockquote" && classNames.includes("transclude")) {
+      // renderTranscludes leaves an unresolvable embed as its original link
+      if (isBrokenLink(node.children[0])) {
+        parent.children.splice(index, 1)
+        return [SKIP, index]
+      }
+    } else if (isBrokenLink(node)) {
+      parent.children.splice(index, 1, ...node.children)
+      return index
+    }
+  })
+}
+
 export function renderPage(
   cfg: GlobalConfiguration,
   slug: FullSlug,
@@ -317,6 +380,8 @@ export function renderPage(
       transform(root, slug, componentData)
     }
   }
+
+  removeBrokenLinks(root, componentData)
 
   // set componentData.tree to the edited html that has transclusions rendered
   componentData.tree = root

@@ -1,7 +1,7 @@
 import test, { describe } from "node:test"
 import assert from "node:assert"
-import { renderTranscludes, pageResources } from "./renderPage"
-import { Root, Element } from "hast"
+import { renderTranscludes, removeBrokenLinks, pageResources } from "./renderPage"
+import { Root, Element, ElementContent } from "hast"
 import { FullSlug } from "../util/path"
 import { GlobalConfiguration } from "../cfg"
 import { QuartzComponentProps } from "./types"
@@ -265,6 +265,125 @@ describe("renderTranscludes", () => {
     const bq = root.children[0] as Element
     const text = JSON.stringify(bq.children)
     assert.ok(text.includes("Circular transclusion"), "self-reference should be blocked")
+  })
+})
+
+describe("removeBrokenLinks", () => {
+  function makeLink(targetSlug: string, text: string): Element {
+    return {
+      type: "element",
+      tagName: "a",
+      properties: {
+        href: `./${targetSlug}`,
+        "data-slug": targetSlug,
+        className: ["internal", "internal-link"],
+      },
+      children: [{ type: "text", value: text }],
+    }
+  }
+
+  function makeParagraph(...children: ElementContent[]): Element {
+    return { type: "element", tagName: "p", properties: {}, children }
+  }
+
+  function makeLinkComponentData(
+    allFiles: QuartzComponentProps["allFiles"],
+    ctxFiles: string[] = [],
+  ): QuartzComponentProps {
+    return { allFiles, cfg, ctx: { allFiles: ctxFiles } } as unknown as QuartzComponentProps
+  }
+
+  const emptyHtml: Root = { type: "root", children: [] }
+
+  test("unwraps links to pages that were not emitted into plain text", () => {
+    const root: Root = {
+      type: "root",
+      children: [
+        makeParagraph(
+          { type: "text", value: "see " },
+          makeLink("private-note", "Private Note"),
+          { type: "text", value: " and " },
+          makeLink("public-note", "Public Note"),
+        ),
+      ],
+    }
+
+    // private-note exists on disk (ctx.allFiles) but was filtered out of allFiles
+    const componentData = makeLinkComponentData(
+      [makePageData("public-note", emptyHtml)],
+      ["private-note.md", "public-note.md"],
+    )
+    removeBrokenLinks(root, componentData)
+
+    const p = root.children[0] as Element
+    assert.deepStrictEqual(
+      p.children.map((c) => (c.type === "element" ? c.tagName : c.type)),
+      ["text", "text", "text", "a"],
+    )
+    assert.strictEqual((p.children[1] as { value: string }).value, "Private Note")
+  })
+
+  test("keeps links to aliases, virtual pages, and assets", () => {
+    const root: Root = {
+      type: "root",
+      children: [
+        makeParagraph(
+          makeLink("other-name", "alias"),
+          makeLink("folder/index", "folder"),
+          makeLink("images/photo.png", "image"),
+        ),
+      ],
+    }
+
+    const componentData = makeLinkComponentData(
+      [
+        makePageData("note", emptyHtml, { aliases: ["other-name"] }),
+        makePageData("folder/index", emptyHtml),
+      ],
+      ["note.md", "images/photo.png"],
+    )
+    removeBrokenLinks(root, componentData)
+
+    const p = root.children[0] as Element
+    assert.strictEqual(p.children.filter((c) => c.type === "element").length, 3)
+  })
+
+  test("leaves same-page anchors and external links alone", () => {
+    const anchor: Element = {
+      type: "element",
+      tagName: "a",
+      properties: { href: "#heading", className: ["internal"] },
+      children: [{ type: "text", value: "heading" }],
+    }
+    const external: Element = {
+      type: "element",
+      tagName: "a",
+      properties: { href: "https://example.com", className: ["external"] },
+      children: [{ type: "text", value: "example" }],
+    }
+    const root: Root = { type: "root", children: [makeParagraph(anchor, external)] }
+
+    removeBrokenLinks(root, makeLinkComponentData([]))
+
+    const p = root.children[0] as Element
+    assert.deepStrictEqual(p.children, [anchor, external])
+  })
+
+  test("removes embeds of pages that do not exist", () => {
+    const root: Root = {
+      type: "root",
+      // an unresolved block on an existing page still links somewhere real, so it stays
+      children: [
+        makeTranscludeBlockquote("missing"),
+        makeTranscludeBlockquote("present", "#^block"),
+      ],
+    }
+
+    removeBrokenLinks(root, makeLinkComponentData([makePageData("present", emptyHtml)]))
+
+    assert.strictEqual(root.children.length, 1)
+    const remaining = (root.children[0] as Element).children[0] as Element
+    assert.strictEqual(remaining.properties["data-slug"], "present")
   })
 })
 
