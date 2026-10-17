@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: My Digital Garden
-  pageTitleSuffix: ""
+  pageTitle: Digital Garden
+  pageTitleSuffix: " | Digital Garden"
   enableSPA: true
   enablePopovers: true
   analytics:
@@ -10,7 +10,7 @@ configuration:
   baseUrl: garden.cilantro.cc
   ignorePatterns:
     - private
-    - templates
+    - Templates
     - .obsidian
   theme:
     fontOrigin: googleFonts
