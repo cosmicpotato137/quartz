@@ -243,7 +243,7 @@ plugins:
         - description
         - tags
         - aliases
-      excludedProperties: [modified,title,page-icon]
+      excludedProperties: [modified,title,page_icon]
       hidePropertiesView: false
       delimiters: ---
       language: yaml
