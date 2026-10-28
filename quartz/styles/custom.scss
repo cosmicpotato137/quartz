@@ -12,3 +12,8 @@
     }
   }
 }
+
+// Invert images tagged with `.responsive-color` when the light theme is active.
+:root[saved-theme="light"] img.responsive-color {
+  filter: invert(1);
+}
